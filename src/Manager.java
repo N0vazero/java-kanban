@@ -42,29 +42,37 @@ public class Manager {
     }
 
     public void setTask(int id, Task task) {
-        this.deleteTask(id);
-        task.setId(id);
-        tasks.put(id, task);
+        if (tasks.containsKey(id)) {
+            this.deleteTask(id);
+            task.setId(id);
+            tasks.put(id, task);
+        }
     }
 
-    public void setEpic(int id, Epic epic) {
-        this.deleteEpic(id);
-        epic.setId(id);
-        epics.put(id, epic);
-        for (EpicShard subtask : this.getSubtasksFromEpic(epic.getId())) {
-            this.addSubtaskWithoutUpdate(subtask);
+    public boolean setEpic(int id, Epic epic) {
+        if (epics.containsKey(id)) {
+            this.deleteEpic(id);
+            epic.setId(id);
+            epics.put(id, epic);
+            for (EpicShard subtask : this.getSubtasksFromEpic(epic.getId())) {
+                this.addSubtaskWithoutUpdate(subtask);
+            }
+            this.updateEpic(epic.getId());
+            return true;
         }
-        this.updateEpic(epic.getId());
+        return false;
 
     }
 
     public void setSubtask(int id, EpicShard subtask) {
-        this.deleteSubtask(id);
-        subtask.setId(id);
-        subtasks.put(id, subtask);
-        Epic epic = this.getEpic(subtask.getIdEpic());
-        epic.getSubTasks().add(subtask);
-        this.updateEpic(epic.getId());
+        if (subtasks.containsKey(id)) {
+            this.deleteSubtask(id);
+            subtask.setId(id);
+            subtasks.put(id, subtask);
+            Epic epic = this.getEpic(subtask.getIdEpic());
+            epic.getSubTasks().add(subtask);
+            this.updateEpic(epic.getId());
+        }
     }
 
     private void addSubtaskWithoutUpdate(EpicShard subtask) {
