@@ -1,5 +1,5 @@
 public class Task {
-    protected int id;
+    protected Integer id = null;
     protected String name;
     protected String description;
     protected Status status;
@@ -21,7 +21,12 @@ public class Task {
         this.status = status;
     }
 
-    public int getId() {
+    public Task(String name, String description, Status status, Integer id) {
+        this(name, description, status);
+        this.id = id;
+    }
+
+    public Integer getId() {
         return id;
     }
 

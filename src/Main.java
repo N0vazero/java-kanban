@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -11,12 +9,19 @@ public class Main {
         Epic epic = new Epic("Планы на выходные");
         manager.addEpic(epic);
 
-        EpicShard subtask1 = new EpicShard(epic.getId(), "Приготовить вкусную кашу");
-        EpicShard subtask2 = new EpicShard(epic.getId(), "Убраться в квартире");
-        EpicShard subtask3 = new EpicShard(epic.getId(), "Погулять");
+        SubTask subtask1 = new SubTask(epic.getId(), "Приготовить вкусную кашу");
+        SubTask subtask2 = new SubTask(epic.getId(), "Убраться в квартире");
+        SubTask subtask3 = new SubTask(epic.getId(), "Погулять");
+        SubTask subtask4 = new SubTask(epic.getId(), "Отдохнуть от бытовой суеты", null, Status.IN_PROGRESS, 4);
         manager.addSubtask(subtask1);
         manager.addSubtask(subtask2);
         manager.addSubtask(subtask3);
+
+        print(manager.getTasks());
+        print(manager.getEpics());
+        print(manager.getSubtasks());
+
+        manager.updateSubtask(subtask4);
 
         print(manager.getTasks());
         print(manager.getEpics());

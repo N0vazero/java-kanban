@@ -1,12 +1,12 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Collections;
 
 
 public class Manager {
     private int id;
     private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, EpicShard> subtasks;
+    private HashMap<Integer, SubTask> subtasks;
     private HashMap<Integer, Epic> epics;
 
     public Manager() {
@@ -25,60 +25,56 @@ public class Manager {
     public void addEpic(Epic epic) {
         epic.setId(id);
         epics.put(id, epic);
-        for (EpicShard subtask : this.getSubtasksFromEpic(epic.getId())) {
-            this.addSubtaskWithoutUpdate(subtask);
+        for (Integer i : this.getSubtasksFromEpic(epic.getId())) {
+            this.addSubtask(this.getSubtask(i));
         }
-        this.updateEpic(epic.getId());
+        this.updateStatusEpic(epic.getId());
         idIncrease();
     }
 
-    public void addSubtask(EpicShard subtask) {
+    public void addSubtask(SubTask subtask) {
         subtask.setId(id);
         subtasks.put(id, subtask);
         Epic epic = this.getEpic(subtask.getIdEpic());
-        epic.getSubTasks().add(subtask);
-        this.updateEpic(epic.getId());
+        epic.getSubTasks().add(subtask.getId());
+        this.updateStatusEpic(epic.getId());
         idIncrease();
     }
 
-    public void setTask(int id, Task task) {
-        if (tasks.containsKey(id)) {
-            this.deleteTask(id);
-            task.setId(id);
-            tasks.put(id, task);
+    public boolean updateTask(Task task) {
+        if (task.getId() != null) {
+            if (tasks.containsKey(task.getId())) {
+                tasks.put(task.getId(), task);
+                return true;
+            }
         }
+        return false;
     }
 
-    public boolean setEpic(int id, Epic epic) {
-        if (epics.containsKey(id)) {
-            this.deleteEpic(id);
-            epic.setId(id);
-            epics.put(id, epic);
-            for (EpicShard subtask : this.getSubtasksFromEpic(epic.getId())) {
-                this.addSubtaskWithoutUpdate(subtask);
+    public boolean updateEpic(Epic epic) {
+        if (epic.getId() != null) {
+            if (epics.containsKey(epic.getId())) {
+                epics.put(epic.getId(), epic);
+                for (Integer i : this.getSubtasksFromEpic(epic.getId())) {
+                    this.addSubtask(this.getSubtask(i));
+                }
+                this.updateStatusEpic(epic.getId());
+                return true;
             }
-            this.updateEpic(epic.getId());
-            return true;
         }
         return false;
 
     }
 
-    public void setSubtask(int id, EpicShard subtask) {
-        if (subtasks.containsKey(id)) {
-            this.deleteSubtask(id);
-            subtask.setId(id);
-            subtasks.put(id, subtask);
-            Epic epic = this.getEpic(subtask.getIdEpic());
-            epic.getSubTasks().add(subtask);
-            this.updateEpic(epic.getId());
+    public void updateSubtask(SubTask subtask) {
+        if (subtask.getId() != null) {
+            if (subtasks.containsKey(subtask.getId())) {
+                subtasks.put(subtask.getId(), subtask);
+                Epic epic = this.getEpic(subtask.getIdEpic());
+                epic.getSubTasks().add(subtask.getId());
+                this.updateStatusEpic(epic.getId());
+            }
         }
-    }
-
-    private void addSubtaskWithoutUpdate(EpicShard subtask) {
-        subtask.setId(id);
-        subtasks.put(id, subtask);
-        idIncrease();
     }
 
     private void idIncrease() {
@@ -99,15 +95,18 @@ public class Manager {
             return true;
         }
         return false;
+        /* Вспомогательный метод для полного удаления subtask из epic
+        Удаление каждой subtask.getId() не требуется, updateStatusEpic() не требуется, поскольку
+        epic по итогу удаляется, метод призван уменьшить трату ресурсов */
     }
 
     public boolean deleteSubtask(int id) {
         if (subtasks.containsKey(id)) {
-            EpicShard subtask = subtasks.get(id);
+            SubTask subtask = subtasks.get(id);
             Epic epic = this.getEpic(subtask.getIdEpic());
-            epic.getSubTasks().remove(subtask);
+            epic.getSubTasks().remove(subtask.getId());
             subtasks.remove(id);
-            this.updateEpic(epic.getId());
+            this.updateStatusEpic(epic.getId());
             return true;
         }
         return false;
@@ -116,9 +115,9 @@ public class Manager {
     public boolean deleteEpic(int id) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
-            ArrayList<EpicShard> subtasks = epic.getSubTasks();
-            for (EpicShard subtask : subtasks) {
-                this.deleteSubtaskWithoutUpdate(subtask.getId());
+            ArrayList<Integer> subtasks = epic.getSubTasks();
+            for (Integer i : subtasks) {
+                this.deleteSubtaskWithoutUpdate(i);
             }
             epics.remove(id);
             return true;
@@ -140,101 +139,86 @@ public class Manager {
         return null;
     }
 
-    public EpicShard getSubtask(int id) {
+    public SubTask getSubtask(int id) {
         if (subtasks.containsKey(id)) {
             return subtasks.get(id);
         }
         return null;
     }
 
-    public ArrayList<EpicShard> getSubtasksFromEpic(int id) {
+    public ArrayList<Integer> getSubtasksFromEpic(int id) {
         Epic epic = this.getEpic(id);
         return epic.getSubTasks();
     }
 
-    private void updateEpic(int id) {
+    private void updateStatusEpic(int id) {
         Epic epic = this.getEpic(id);
         boolean isNew = true;
         boolean isDone = true;
         if (this.getSubtasksFromEpic(id).isEmpty()) {
             isNew = true;
         }
-        for (EpicShard subtask : this.getSubtasksFromEpic(id)) {
-            if (subtask.getStatus() == Status.IN_PROGRESS) {
-                this.setStatusEpic(id, Status.IN_PROGRESS);
+        for (Integer i : this.getSubtasksFromEpic(id)) {
+            if (this.getSubtask(i).getStatus() == Status.IN_PROGRESS) {
+                epic.setStatus(Status.IN_PROGRESS);
                 return;
             }
-            if (subtask.getStatus() == Status.DONE) {
+            if (this.getSubtask(i).getStatus() == Status.DONE) {
                 isNew = false;
             }
-            if (subtask.getStatus() == Status.NEW) {
+            if (this.getSubtask(i).getStatus() == Status.NEW) {
                 isDone = false;
             }
         }
         if (isNew) {
-            this.setStatusEpic(id, Status.NEW);
+            epic.setStatus(Status.NEW);
         } else if (isDone) {
-            this.setStatusEpic(id, Status.DONE);
+            epic.setStatus(Status.DONE);
         } else {
-            this.setStatusEpic(id, Status.IN_PROGRESS);
+            epic.setStatus(Status.IN_PROGRESS);
         }
-    }
-
-    private boolean setStatusEpic(int id, Status status) {
-        Epic epic = this.getEpic(id);
-        if (epic != null) {
-            epic.setStatus(status);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean setStatusTask(int id, Status status) {
-        Task task = this.getTask(id);
-        if (task != null) {
-            task.setStatus(status);
-            return true;
-        }
-        return false;
     }
 
     public boolean setStatusSubtask(int id, Status status) {
-        EpicShard subtask = this.getSubtask(id);
+        SubTask subtask = this.getSubtask(id);
         if (subtask != null) {
             subtask.setStatus(status);
-            this.updateEpic(subtask.getIdEpic());
+            this.updateStatusEpic(subtask.getIdEpic());
             return true;
         }
         return false;
     }
 
     public void deleteAllTasks() {
-        for (Object task : tasks.values().toArray()) {
+        Task[] temp = new Task[0];
+        for (Task task : tasks.values().toArray(temp)) {
             this.deleteTask(((Task)(task)).getId());
         }
     }
 
     public void deleteAllSubtasks() {
-        for (Object subtask : subtasks.values().toArray()) {
-            this.deleteSubtask(((EpicShard)(subtask)).getId());
+        SubTask[] temp = new SubTask[0];
+        for (SubTask subtask : subtasks.values().toArray(temp)) {
+            this.deleteSubtask(((SubTask)(subtask)).getId());
         }
     }
 
     public void deleteAllEpics() {
-        for (Object epic : epics.values().toArray()) {
+        Epic[] temp = new Epic[0];
+        for (Epic epic : epics.values().toArray(temp)) {
             this.deleteEpic(((Epic)(epic)).getId());
         }
     }
 
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
+    public Collection<Task> getTasks() {
+        return tasks.values();
     }
 
-    public HashMap<Integer, EpicShard> getSubtasks() {
-        return subtasks;
+    public Collection<SubTask> getSubtasks() {
+        return subtasks.values();
     }
 
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
+    public Collection<Epic> getEpics() {
+        return epics.values();
     }
 }
