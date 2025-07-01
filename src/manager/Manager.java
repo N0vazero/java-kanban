@@ -1,3 +1,10 @@
+package manager;
+
+import task.Epic;
+import task.Task;
+import task.Status;
+import task.SubTask;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -5,15 +12,12 @@ import java.util.HashMap;
 
 public class Manager {
     private int id;
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, SubTask> subtasks;
-    private HashMap<Integer, Epic> epics;
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, SubTask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
 
     public Manager() {
-        id = 0;
-        tasks = new HashMap<>();
-        subtasks = new HashMap<>();
-        epics = new HashMap<>();
+        id = 1;
     }
 
     public void addTask(Task task) {
@@ -25,8 +29,8 @@ public class Manager {
     public void addEpic(Epic epic) {
         epic.setId(id);
         epics.put(id, epic);
-        for (Integer i : this.getSubtasksFromEpic(epic.getId())) {
-            this.addSubtask(this.getSubtask(i));
+        for (Integer idSubtask : this.getSubtasksFromEpic(epic.getId())) {
+            this.addSubtask(this.getSubtask(idSubtask));
         }
         this.updateStatusEpic(epic.getId());
         idIncrease();
@@ -55,8 +59,10 @@ public class Manager {
         if (epic.getId() != null) {
             if (epics.containsKey(epic.getId())) {
                 epics.put(epic.getId(), epic);
-                for (Integer i : this.getSubtasksFromEpic(epic.getId())) {
-                    this.addSubtask(this.getSubtask(i));
+                Integer[] temp = new Integer[0];
+                Integer[] subtasksId = epic.getSubTasks().toArray(temp);
+                for (Integer idSubtask : subtasksId) {
+                    this.updateSubtask(this.getSubtask(idSubtask));
                 }
                 this.updateStatusEpic(epic.getId());
                 return true;
@@ -116,8 +122,8 @@ public class Manager {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
             ArrayList<Integer> subtasks = epic.getSubTasks();
-            for (Integer i : subtasks) {
-                this.deleteSubtaskWithoutUpdate(i);
+            for (Integer idSubtask : subtasks) {
+                this.deleteSubtaskWithoutUpdate(idSubtask);
             }
             epics.remove(id);
             return true;
@@ -158,15 +164,15 @@ public class Manager {
         if (this.getSubtasksFromEpic(id).isEmpty()) {
             isNew = true;
         }
-        for (Integer i : this.getSubtasksFromEpic(id)) {
-            if (this.getSubtask(i).getStatus() == Status.IN_PROGRESS) {
+        for (Integer idSubtask : this.getSubtasksFromEpic(id)) {
+            if (this.getSubtask(idSubtask).getStatus() == Status.IN_PROGRESS) {
                 epic.setStatus(Status.IN_PROGRESS);
                 return;
             }
-            if (this.getSubtask(i).getStatus() == Status.DONE) {
+            if (this.getSubtask(idSubtask).getStatus() == Status.DONE) {
                 isNew = false;
             }
-            if (this.getSubtask(i).getStatus() == Status.NEW) {
+            if (this.getSubtask(idSubtask).getStatus() == Status.NEW) {
                 isDone = false;
             }
         }
@@ -177,16 +183,6 @@ public class Manager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
-    }
-
-    public boolean setStatusSubtask(int id, Status status) {
-        SubTask subtask = this.getSubtask(id);
-        if (subtask != null) {
-            subtask.setStatus(status);
-            this.updateStatusEpic(subtask.getIdEpic());
-            return true;
-        }
-        return false;
     }
 
     public void deleteAllTasks() {
@@ -210,15 +206,9 @@ public class Manager {
         }
     }
 
-    public Collection<Task> getTasks() {
-        return tasks.values();
-    }
+    public ArrayList<Task> getTasks() { return new ArrayList<>(tasks.values()); }
 
-    public Collection<SubTask> getSubtasks() {
-        return subtasks.values();
-    }
+    public ArrayList<SubTask> getSubtasks() { return new ArrayList<>(subtasks.values()); }
 
-    public Collection<Epic> getEpics() {
-        return epics.values();
-    }
+    public ArrayList<Epic> getEpics() { return new ArrayList<>(epics.values());}
 }
