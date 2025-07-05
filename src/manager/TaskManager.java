@@ -5,9 +5,9 @@ import task.SubTask;
 import task.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
-    HistoryManager<Task> getHistoryManager();
 
     boolean addTask(Task task);
 
@@ -33,7 +33,7 @@ public interface TaskManager {
 
     SubTask getSubtask(int id, boolean isUserCall);
 
-    ArrayList<Integer> getSubtasksFromEpic(int id);
+    List<Integer> getSubtasksFromEpic(int id);
 
     void deleteAllTasks();
 
@@ -41,9 +41,13 @@ public interface TaskManager {
 
     void deleteAllEpics();
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<SubTask> getSubTasks();
+    List<SubTask> getSubTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
+
+    String printHistory();
+
+    List<Task> getHistory();
 }

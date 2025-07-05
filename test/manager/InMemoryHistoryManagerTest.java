@@ -14,7 +14,7 @@ class InMemoryHistoryManagerTest {
         manager.addTask(task);
         manager.getTask(task.getId(), true);
         task.setDescription("There is some changes");
-        Task oldTask = manager.getHistoryManager().getHistory().getFirst();
+        Task oldTask = manager.getHistory().getFirst();
         assertNotEquals(task.getDescription(), oldTask.getDescription());
     }
 

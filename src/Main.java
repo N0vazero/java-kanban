@@ -45,7 +45,7 @@ public class Main {
         inMemoryTaskManager.getTask(3, true);
         inMemoryTaskManager.getTask(4, true);
         inMemoryTaskManager.getEpic(4, true);
-        print(inMemoryTaskManager.getHistoryManager().toString());
+        print(inMemoryTaskManager.printHistory());
     }
 
     public static void print(Object o) {

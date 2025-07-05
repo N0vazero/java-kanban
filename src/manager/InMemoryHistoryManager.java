@@ -3,19 +3,15 @@ package manager;
 import task.Task;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class InMemoryHistoryManager implements HistoryManager<Task> {
-    private final ArrayList<Task> history = new ArrayList<>();;
+    private final List<Task> history = new ArrayList<>();
     private final Integer maxHistoryLength = 10;
 
-    public InMemoryHistoryManager() {
-
-    }
-
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return history;
     }
 
