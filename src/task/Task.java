@@ -69,4 +69,18 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        } else if (o instanceof Task) {
+            return this.id.equals(((Task) o).id);
+        }
+        return false;
+    }
+
+    public Task copy() {
+        return new Task(name, description, status, id);
+    }
 }

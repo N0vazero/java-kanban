@@ -1,7 +1,7 @@
 package task;
 
 public class SubTask extends Task {
-    private int idEpic;
+    private Integer idEpic;
 
     public SubTask(int idEpic) {
         super();
@@ -41,5 +41,20 @@ public class SubTask extends Task {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        } else if (o instanceof SubTask) {
+            return (this.id.equals( ( (SubTask) o).id) && this.idEpic.equals(( (SubTask) o).idEpic) );
+        }
+        return false;
+    }
+
+    @Override
+    public SubTask copy() {
+        return new SubTask(idEpic, name, description, status, id);
     }
 }
