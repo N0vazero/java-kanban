@@ -131,10 +131,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (subTasks.containsKey(id)) {
                 SubTask subtask = subTasks.get(id);
                 Epic epic = this.getEpic(subtask.getIdEpic(), false);
-                if (epic.getSubTasks().contains(subtask.getId())) {
-                    Integer temp = id;
-                    epic.getSubTasks().remove(temp);
-                }
+                epic.getSubTasks().remove((Integer) id);
                 subTasks.remove(id);
                 this.updateStatusEpic(epic.getId());
                 return true;
