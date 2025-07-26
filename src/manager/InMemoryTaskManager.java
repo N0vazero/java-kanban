@@ -102,7 +102,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean deleteTask(int id) {
+    public boolean deleteTask(Integer id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
             return true;
@@ -110,7 +110,7 @@ public class InMemoryTaskManager implements TaskManager {
         return false;
     }
 
-    private boolean deleteSubtaskWithoutUpdate(int id) {
+    private boolean deleteSubtaskWithoutUpdate(Integer id) {
         if (subTasks.containsKey(id)) {
             subTasks.remove(id);
             return true;
@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean deleteSubtask(int id) {
+    public boolean deleteSubtask(Integer id) {
         if (subTasks.containsKey(id)) {
             SubTask subtask = subTasks.get(id);
             Epic epic = this.getEpic(subtask.getIdEpic(), false);
@@ -135,7 +135,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean deleteEpic(int id) {
+    public boolean deleteEpic(Integer id) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
             ArrayList<Integer> subtasks = epic.getSubTasks();
@@ -149,7 +149,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id, boolean isUserCall) {
+    public Task getTask(Integer id, boolean isUserCall) {
         if (tasks.containsKey(id)) {
             Task task = tasks.get(id);
             if (isUserCall) {
@@ -161,7 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpic(int id, boolean isUserCall) {
+    public Epic getEpic(Integer id, boolean isUserCall) {
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);
             if (isUserCall) {
@@ -173,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public SubTask getSubtask(int id, boolean isUserCall) {
+    public SubTask getSubtask(Integer id, boolean isUserCall) {
         if (subTasks.containsKey(id)) {
             SubTask subTask = subTasks.get(id);
             if (isUserCall) {
