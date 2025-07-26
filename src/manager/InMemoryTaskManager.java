@@ -1,24 +1,22 @@
 package manager;
 
 import task.Epic;
-import task.Task;
 import task.Status;
 import task.SubTask;
+import task.Task;
 import util.HistoryList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
-
 public class InMemoryTaskManager implements TaskManager {
-    private int id;
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final HistoryManager<Task> historyManager = new InMemoryHistoryManager();
+    private int id;
 
     public InMemoryTaskManager() {
         id = 1;
@@ -224,7 +222,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllTasks() {
         Task[] temp = new Task[0];
         for (Task task : tasks.values().toArray(temp)) {
-            this.deleteTask(((Task)(task)).getId());
+            this.deleteTask(((Task) (task)).getId());
         }
     }
 
@@ -232,7 +230,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllSubtasks() {
         SubTask[] temp = new SubTask[0];
         for (SubTask subtask : subTasks.values().toArray(temp)) {
-            this.deleteSubtask(((SubTask)(subtask)).getId());
+            this.deleteSubtask(((SubTask) (subtask)).getId());
         }
     }
 
@@ -240,12 +238,14 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() {
         Epic[] temp = new Epic[0];
         for (Epic epic : epics.values().toArray(temp)) {
-            this.deleteEpic(((Epic)(epic)).getId());
+            this.deleteEpic(((Epic) (epic)).getId());
         }
     }
 
     @Override
-    public ArrayList<Task> getTasks() { return new ArrayList<>(tasks.values()); }
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(tasks.values());
+    }
 
     @Override
     public ArrayList<SubTask> getSubTasks() {

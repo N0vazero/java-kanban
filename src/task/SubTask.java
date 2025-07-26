@@ -17,6 +17,7 @@ public class SubTask extends Task {
         super(name, description);
         this.idEpic = idEpic;
     }
+
     public SubTask(int idEpic, String name, String description, Status status) {
         super(name, description, status);
         this.idEpic = idEpic;
@@ -48,7 +49,7 @@ public class SubTask extends Task {
         if (o == this) {
             return true;
         } else if (o instanceof SubTask) {
-            return (this.id.equals( ( (SubTask) o).id) && this.idEpic.equals(( (SubTask) o).idEpic) );
+            return (this.id.equals(((SubTask) o).id) && this.idEpic.equals(((SubTask) o).idEpic));
         }
         return false;
     }

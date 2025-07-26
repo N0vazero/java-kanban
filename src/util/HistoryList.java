@@ -2,9 +2,9 @@ package util;
 
 import task.Task;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 public class HistoryList implements Iterable<Task> {
@@ -16,25 +16,6 @@ public class HistoryList implements Iterable<Task> {
 
     public Iterator<Task> iterator() {
         return new MyLinkedListIterator();
-    }
-
-    private class MyLinkedListIterator implements Iterator<Task> {
-        private Node<Task> current = head;
-
-        @Override
-        public boolean hasNext() {
-            return current != null;
-        }
-
-        @Override
-        public Task next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            Task data = current.getData();
-            current = current.getNext();
-            return data;
-        }
     }
 
     public void addLast(Task task) {
@@ -103,9 +84,9 @@ public class HistoryList implements Iterable<Task> {
     }
 
     private static class Node<E> {
+        private final E data;
         private Node<E> prev;
         private Node<E> next;
-        private final E data;
 
         public Node(E data) {
             this.data = data;
@@ -123,20 +104,39 @@ public class HistoryList implements Iterable<Task> {
             return prev;
         }
 
-        public Node<E> getNext() {
-            return next;
+        public void setPrev(Node<E> prev) {
+            this.prev = prev;
         }
 
-        public E getData() {
-            return data;
+        public Node<E> getNext() {
+            return next;
         }
 
         public void setNext(Node<E> next) {
             this.next = next;
         }
 
-        public void setPrev(Node<E> prev) {
-            this.prev = prev;
+        public E getData() {
+            return data;
+        }
+    }
+
+    private class MyLinkedListIterator implements Iterator<Task> {
+        private Node<Task> current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public Task next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Task data = current.getData();
+            current = current.getNext();
+            return data;
         }
     }
 }

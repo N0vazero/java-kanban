@@ -3,9 +3,6 @@ package manager;
 import task.Task;
 import util.HistoryList;
 
-import java.util.List;
-
-
 public class InMemoryHistoryManager implements HistoryManager<Task> {
     private final HistoryList history = new HistoryList();
 

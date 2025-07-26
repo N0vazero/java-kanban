@@ -3,12 +3,11 @@ package util;
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import task.Status;
 import task.Task;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
 
 class HistoryListTest {
     static TaskManager manager = Managers.getDefalut();
