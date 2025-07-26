@@ -1,4 +1,3 @@
-import manager.InMemoryTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import task.Epic;
@@ -43,8 +42,9 @@ public class Main {
         inMemoryTaskManager.getTask(1, true);
         inMemoryTaskManager.getTask(2, true);
         inMemoryTaskManager.getTask(3, true);
-        inMemoryTaskManager.getTask(4, true);
-        inMemoryTaskManager.getEpic(4, true);
+        inMemoryTaskManager.getTask(3, true);
+        inMemoryTaskManager.getTask(2, true);
+
         print(inMemoryTaskManager.printHistory());
     }
 

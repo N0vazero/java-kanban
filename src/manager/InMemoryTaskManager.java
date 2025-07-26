@@ -1,22 +1,22 @@
 package manager;
 
 import task.Epic;
-import task.Task;
 import task.Status;
 import task.SubTask;
+import task.Task;
+import util.HistoryList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager {
-    private int id;
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final HistoryManager<Task> historyManager = new InMemoryHistoryManager();
+    private int id;
 
     public InMemoryTaskManager() {
         id = 1;
@@ -58,7 +58,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateTask(Task task) {
-        if (task.getId() != null) {
+        if (task.getId() != -1) {
             if (tasks.containsKey(task.getId())) {
                 tasks.put(task.getId(), task);
                 return true;
@@ -69,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateEpic(Epic epic) {
-        if (epic.getId() != null) {
+        if (epic.getId() != -1) {
             if (epics.containsKey(epic.getId())) {
                 epics.put(epic.getId(), epic);
                 Integer[] temp = new Integer[0];
@@ -87,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(SubTask subtask) {
-        if (subtask.getId() != null) {
+        if (subtask.getId() != -1) {
             if (subTasks.containsKey(subtask.getId())) {
                 subTasks.put(subtask.getId(), subtask);
                 Epic epic = this.getEpic(subtask.getIdEpic(), false);
@@ -102,18 +102,22 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean deleteTask(int id) {
-        if (tasks.containsKey(id)) {
-            tasks.remove(id);
-            return true;
+    public boolean deleteTask(Integer id) {
+        if (id != null && id != -1) {
+            if (tasks.containsKey(id)) {
+                tasks.remove(id);
+                return true;
+            }
         }
         return false;
     }
 
-    private boolean deleteSubtaskWithoutUpdate(int id) {
-        if (subTasks.containsKey(id)) {
-            subTasks.remove(id);
-            return true;
+    private boolean deleteSubtaskWithoutUpdate(Integer id) {
+        if (id != null && id != -1) {
+            if (subTasks.containsKey(id)) {
+                subTasks.remove(id);
+                return true;
+            }
         }
         return false;
         /* Вспомогательный метод для полного удаления subtask из epic
@@ -122,64 +126,74 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean deleteSubtask(int id) {
-        if (subTasks.containsKey(id)) {
-            SubTask subtask = subTasks.get(id);
-            Epic epic = this.getEpic(subtask.getIdEpic(), false);
-            epic.getSubTasks().remove(subtask.getId());
-            subTasks.remove(id);
-            this.updateStatusEpic(epic.getId());
-            return true;
+    public boolean deleteSubtask(Integer id) {
+        if (id != null && id != -1) {
+            if (subTasks.containsKey(id)) {
+                SubTask subtask = subTasks.get(id);
+                Epic epic = this.getEpic(subtask.getIdEpic(), false);
+                epic.getSubTasks().remove((Integer) id);
+                subTasks.remove(id);
+                this.updateStatusEpic(epic.getId());
+                return true;
+            }
         }
         return false;
     }
 
     @Override
-    public boolean deleteEpic(int id) {
-        if (epics.containsKey(id)) {
-            Epic epic = epics.get(id);
-            ArrayList<Integer> subtasks = epic.getSubTasks();
-            for (Integer idSubtask : subtasks) {
-                this.deleteSubtaskWithoutUpdate(idSubtask);
+    public boolean deleteEpic(Integer id) {
+        if (id != null && id != -1) {
+            if (epics.containsKey(id)) {
+                Epic epic = epics.get(id);
+                ArrayList<Integer> subtasks = epic.getSubTasks();
+                for (Integer idSubtask : subtasks) {
+                    this.deleteSubtaskWithoutUpdate(idSubtask);
+                }
+                epics.remove(id);
+                return true;
             }
-            epics.remove(id);
-            return true;
         }
         return false;
     }
 
     @Override
-    public Task getTask(int id, boolean isUserCall) {
-        if (tasks.containsKey(id)) {
-            Task task = tasks.get(id);
-            if (isUserCall) {
-                historyManager.add(task);
+    public Task getTask(Integer id, boolean isUserCall) {
+        if (id != null && id != -1) {
+            if (tasks.containsKey(id)) {
+                Task task = tasks.get(id);
+                if (isUserCall) {
+                    historyManager.add(task);
+                }
+                return task;
             }
-            return task;
         }
         return null;
     }
 
     @Override
-    public Epic getEpic(int id, boolean isUserCall) {
-        if (epics.containsKey(id)) {
-            Epic epic = epics.get(id);
-            if (isUserCall) {
-                historyManager.add(epic);
+    public Epic getEpic(Integer id, boolean isUserCall) {
+        if (id != null && id != -1) {
+            if (epics.containsKey(id)) {
+                Epic epic = epics.get(id);
+                if (isUserCall) {
+                    historyManager.add(epic);
+                }
+                return epic;
             }
-            return epic;
         }
         return null;
     }
 
     @Override
-    public SubTask getSubtask(int id, boolean isUserCall) {
-        if (subTasks.containsKey(id)) {
-            SubTask subTask = subTasks.get(id);
-            if (isUserCall) {
-                historyManager.add(subTask);
+    public SubTask getSubtask(Integer id, boolean isUserCall) {
+        if (id != null && id != -1) {
+            if (subTasks.containsKey(id)) {
+                SubTask subTask = subTasks.get(id);
+                if (isUserCall) {
+                    historyManager.add(subTask);
+                }
+                return subTask;
             }
-            return subTask;
         }
         return null;
     }
@@ -257,7 +271,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public List<Task> getHistory() {
+    public HistoryList getHistory() {
         return historyManager.getHistory();
     }
 

@@ -1,7 +1,9 @@
 package task;
 
+import java.util.Objects;
+
 public class Task {
-    protected Integer id;
+    protected Integer id = -1;
     protected String name;
     protected String description;
     protected Status status;
@@ -30,7 +32,7 @@ public class Task {
         this.id = id;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -84,5 +86,10 @@ public class Task {
 
     public Task copy() {
         return new Task(name, description, status, id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

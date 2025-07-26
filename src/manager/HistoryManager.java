@@ -1,10 +1,11 @@
 package manager;
 
-import java.util.ArrayList;
-import java.util.List;
+import util.HistoryList;
 
 public interface HistoryManager<T> {
-    List<T> getHistory();
+    void remove(int id);
+
+    HistoryList getHistory();
 
     void add(T obj);
 }
