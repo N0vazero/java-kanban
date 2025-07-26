@@ -22,7 +22,7 @@ public class Epic extends Task {
     public Epic(String name, String description, Integer id, ArrayList<Integer> subtasks) {
         super(name, description);
         this.id = id;
-        this.subtasks = (ArrayList<Integer>)(subtasks.clone()); // Исключения изменения приватного
+        this.subtasks = (ArrayList<Integer>) (subtasks.clone()); // Исключения изменения приватного
         // списка путем изменения списка из аргумента
     }
 
@@ -46,8 +46,8 @@ public class Epic extends Task {
         if (o == this) {
             return true;
         } else if (o instanceof Epic) {
-            boolean isIdEquals = this.id.equals( ( (Epic) o).id);
-            boolean isSubtasksEquals = this.subtasks.equals( ((Epic) o).subtasks);
+            boolean isIdEquals = this.id.equals(((Epic) o).id);
+            boolean isSubtasksEquals = this.subtasks.equals(((Epic) o).subtasks);
             return isSubtasksEquals && isIdEquals;
         }
         return false;

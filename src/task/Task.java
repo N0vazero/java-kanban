@@ -9,6 +9,7 @@ public class Task {
     public Task() {
         this.status = Status.NEW;
     }
+
     public Task(String name) {
         this();
         this.name = name;
@@ -18,6 +19,7 @@ public class Task {
         this(name);
         this.description = description;
     }
+
     public Task(String name, String description, Status status) {
         this(name, description);
         this.status = status;
