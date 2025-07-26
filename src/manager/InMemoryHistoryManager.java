@@ -19,7 +19,7 @@ public class InMemoryHistoryManager implements HistoryManager<Task> {
     @Override
     public void remove(int id) {
         for (Task task : history) {
-            if (task.getId().equals(id)) {
+            if (task.getId() == id) {
                 history.remove(task);
             }
         }
