@@ -7,6 +7,7 @@ import task.Status;
 import task.Task;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 class HistoryListTest {
@@ -21,6 +22,7 @@ class HistoryListTest {
         manager.addTask(task2);
         manager.addTask(task3);
     }
+
     @Test
     public void listRemoveElements() {
         HistoryList taskList = new HistoryList();
