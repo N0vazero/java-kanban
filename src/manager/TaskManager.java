@@ -3,6 +3,7 @@ package manager;
 import task.Epic;
 import task.SubTask;
 import task.Task;
+import util.HistoryList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,5 +50,5 @@ public interface TaskManager {
 
     String printHistory();
 
-    List<Task> getHistory();
+    HistoryList getHistory();
 }

@@ -4,6 +4,7 @@ import task.Epic;
 import task.Task;
 import task.Status;
 import task.SubTask;
+import util.HistoryList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -256,7 +257,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public List<Task> getHistory() {
+    public HistoryList getHistory() {
         return historyManager.getHistory();
     }
 
