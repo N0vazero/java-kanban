@@ -103,17 +103,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean deleteTask(Integer id) {
-        if (tasks.containsKey(id)) {
-            tasks.remove(id);
-            return true;
+        if (id != null) {
+            if (tasks.containsKey(id)) {
+                tasks.remove(id);
+                return true;
+            }
         }
         return false;
     }
 
     private boolean deleteSubtaskWithoutUpdate(Integer id) {
-        if (subTasks.containsKey(id)) {
-            subTasks.remove(id);
-            return true;
+        if (id != null) {
+            if (subTasks.containsKey(id)) {
+                subTasks.remove(id);
+                return true;
+            }
         }
         return false;
         /* Вспомогательный метод для полного удаления subtask из epic
@@ -123,27 +127,31 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean deleteSubtask(Integer id) {
-        if (subTasks.containsKey(id)) {
-            SubTask subtask = subTasks.get(id);
-            Epic epic = this.getEpic(subtask.getIdEpic(), false);
-            epic.getSubTasks().remove(subtask.getId());
-            subTasks.remove(id);
-            this.updateStatusEpic(epic.getId());
-            return true;
+        if (id != null) {
+            if (subTasks.containsKey(id)) {
+                SubTask subtask = subTasks.get(id);
+                Epic epic = this.getEpic(subtask.getIdEpic(), false);
+                epic.getSubTasks().remove(subtask.getId());
+                subTasks.remove(id);
+                this.updateStatusEpic(epic.getId());
+                return true;
+            }
         }
         return false;
     }
 
     @Override
     public boolean deleteEpic(Integer id) {
-        if (epics.containsKey(id)) {
-            Epic epic = epics.get(id);
-            ArrayList<Integer> subtasks = epic.getSubTasks();
-            for (Integer idSubtask : subtasks) {
-                this.deleteSubtaskWithoutUpdate(idSubtask);
+        if (id != null) {
+            if (epics.containsKey(id)) {
+                Epic epic = epics.get(id);
+                ArrayList<Integer> subtasks = epic.getSubTasks();
+                for (Integer idSubtask : subtasks) {
+                    this.deleteSubtaskWithoutUpdate(idSubtask);
+                }
+                epics.remove(id);
+                return true;
             }
-            epics.remove(id);
-            return true;
         }
         return false;
     }
