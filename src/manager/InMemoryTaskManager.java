@@ -58,7 +58,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateTask(Task task) {
-        if (task.getId() != null) {
+        if (existenceCheck(task.getId())) {
             if (tasks.containsKey(task.getId())) {
                 tasks.put(task.getId(), task);
                 return true;
@@ -69,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateEpic(Epic epic) {
-        if (epic.getId() != null) {
+        if (existenceCheck(epic.getId())) {
             if (epics.containsKey(epic.getId())) {
                 epics.put(epic.getId(), epic);
                 Integer[] temp = new Integer[0];
@@ -87,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(SubTask subtask) {
-        if (subtask.getId() != null) {
+        if (existenceCheck(subtask.getId())) {
             if (subTasks.containsKey(subtask.getId())) {
                 subTasks.put(subtask.getId(), subtask);
                 Epic epic = this.getEpic(subtask.getIdEpic(), false);
@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean deleteTask(Integer id) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (tasks.containsKey(id)) {
                 tasks.remove(id);
                 return true;
@@ -113,7 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean deleteSubtaskWithoutUpdate(Integer id) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (subTasks.containsKey(id)) {
                 subTasks.remove(id);
                 return true;
@@ -127,7 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean deleteSubtask(Integer id) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (subTasks.containsKey(id)) {
                 SubTask subtask = subTasks.get(id);
                 Epic epic = this.getEpic(subtask.getIdEpic(), false);
@@ -142,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean deleteEpic(Integer id) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (epics.containsKey(id)) {
                 Epic epic = epics.get(id);
                 ArrayList<Integer> subtasks = epic.getSubTasks();
@@ -158,7 +158,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(Integer id, boolean isUserCall) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (tasks.containsKey(id)) {
                 Task task = tasks.get(id);
                 if (isUserCall) {
@@ -172,7 +172,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpic(Integer id, boolean isUserCall) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (epics.containsKey(id)) {
                 Epic epic = epics.get(id);
                 if (isUserCall) {
@@ -186,7 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSubtask(Integer id, boolean isUserCall) {
-        if (id != null) {
+        if (existenceCheck(id)) {
             if (subTasks.containsKey(id)) {
                 SubTask subTask = subTasks.get(id);
                 if (isUserCall) {
@@ -270,6 +270,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     public HistoryList getHistory() {
         return historyManager.getHistory();
+    }
+
+    private boolean existenceCheck(Object o) {
+        if (o instanceof Integer) {
+            return (Integer)o != -1;
+        } else {
+            return o != null;
+        }
     }
 
     public String printHistory() {
