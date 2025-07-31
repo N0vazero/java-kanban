@@ -208,9 +208,6 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = this.getEpic(id, false);
         boolean isNew = true;
         boolean isDone = true;
-        if (this.getSubtasksFromEpic(id).isEmpty()) {
-            isNew = true;
-        }
         for (Integer idSubtask : this.getSubtasksFromEpic(id)) {
             if (this.getSubtask(idSubtask, false).getStatus() == Status.IN_PROGRESS) {
                 epic.setStatus(Status.IN_PROGRESS);
