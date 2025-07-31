@@ -32,7 +32,7 @@ public class HistoryList implements Iterable<Task> {
             head = newNode;
         }
         tail = newNode;
-        size++;
+        size = hashMap.size();
     }
 
     private void remove(Node<Task> node) {
@@ -53,7 +53,7 @@ public class HistoryList implements Iterable<Task> {
         Task task = node.getData();
 
         hashMap.remove(task.getId());
-        size--;
+        size = hashMap.size();
     }
 
     public void remove(Task task) {
