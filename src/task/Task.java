@@ -3,7 +3,7 @@ package task;
 import java.util.Objects;
 
 public class Task {
-    protected Integer id;
+    protected Integer id = -1;
     protected String name;
     protected String description;
     protected Status status;
