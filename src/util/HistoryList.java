@@ -2,18 +2,66 @@ package util;
 
 import task.Task;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
-public class HistoryList implements Iterable<Task> {
+public class HistoryList implements List<Task>, Iterable<Task> {
     private final Map<Integer, Node<Task>> hashMap = new HashMap<>();
     private Node<Task> head = null;
     private Node<Task> tail = null;
 
     public Iterator<Task> iterator() {
         return new MyLinkedListIterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return hashMap.values().toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return hashMap.values().toArray(a);
+    }
+
+    @Override
+    public boolean add(Task task) {
+        addLast(task);
+        return true;
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return hashMap.values().containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends Task> c) {
+        for (Object o : c) {
+            if (o instanceof Task) {
+                addLast((Task)o);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends Task> c) {
+        return false;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return false;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return false;
     }
 
     public void addLast(Task task) {
@@ -72,12 +120,103 @@ public class HistoryList implements Iterable<Task> {
         tail = null;
     }
 
+    @Override
+    public Task get(int index) {
+        Node<Task> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current.getData();
+    }
+
+    @Override
+    public Task set(int index, Task element) {
+        Node<Task> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        Task oldData = current.getData();
+        current = new Node<>(element, current.getPrev(), current.getNext());
+        return oldData;
+    }
+
+    @Override
+    public void add(int index, Task element) {
+        Node<Task> current = head;
+        for (int i = 0; i <= index; i++) {
+            if (i == index) {
+                Node<Task> prev = current.getPrev();
+                Node<Task> incoming = new Node<>(element, prev, current);
+                prev = new Node<>(prev.getData(), prev.getPrev(), incoming);
+
+                hashMap.put(incoming.getData().getId(), incoming);
+            }
+            current = current.getNext();
+        }
+    }
+
+    @Override
+    public Task remove(int index) {
+        Node<Task> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        Task oldData = current.getData();
+        remove(current);
+        return oldData;
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        if (o instanceof Task) {
+            Node<Task> current = head;
+            for (int i = 0; i < hashMap.size(); i++) {
+                if (current.getData() == (Task) o) {
+                    return i;
+                }
+                current = current.getNext();
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return indexOf(o);
+    }
+
+    @Override
+    public ListIterator<Task> listIterator() {
+        return null;
+    }
+
+    @Override
+    public ListIterator<Task> listIterator(int index) {
+        return null;
+    }
+
+    @Override
+    public List<Task> subList(int fromIndex, int toIndex) {
+        return null;
+    }
+
     public int size() {
         return hashMap.size();
     }
 
     public boolean isEmpty() {
         return hashMap.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        if (o instanceof Task) {
+            return hashMap.containsValue(((Task) o).getId());
+        } else if (o instanceof Integer) {
+            return hashMap.containsKey((Integer) o);
+        } else {
+            return false;
+        }
     }
 
     private static class Node<E> {
