@@ -12,8 +12,6 @@ public class HistoryList implements Iterable<Task> {
     private Node<Task> head = null;
     private Node<Task> tail = null;
 
-    private int size = 0;
-
     public Iterator<Task> iterator() {
         return new MyLinkedListIterator();
     }
@@ -24,15 +22,15 @@ public class HistoryList implements Iterable<Task> {
             remove(existingNode);
         }
         Node<Task> newNode = new Node<>(task, tail, null);
+        if (hashMap.isEmpty()) {
+            head = newNode;
+        }
         hashMap.put(task.getId(), newNode);
         if (tail != null) {
             tail.setNext(newNode);
         }
-        if (size == 0) {
-            head = newNode;
-        }
+
         tail = newNode;
-        size = hashMap.size();
     }
 
     private void remove(Node<Task> node) {
@@ -53,7 +51,6 @@ public class HistoryList implements Iterable<Task> {
         Task task = node.getData();
 
         hashMap.remove(task.getId());
-        size = hashMap.size();
     }
 
     public void remove(Task task) {
@@ -76,7 +73,7 @@ public class HistoryList implements Iterable<Task> {
     }
 
     public int size() {
-        return size;
+        return hashMap.size();
     }
 
     public boolean isEmpty() {
