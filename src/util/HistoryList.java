@@ -43,7 +43,7 @@ public class HistoryList implements List<Task>, Iterable<Task> {
     public boolean addAll(Collection<? extends Task> c) {
         for (Object o : c) {
             if (o instanceof Task) {
-                addLast((Task)o);
+                addLast((Task) o);
             }
         }
         return true;

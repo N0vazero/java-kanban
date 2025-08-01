@@ -1,7 +1,5 @@
 package manager;
 
-import util.HistoryList;
-
 import java.util.List;
 
 public interface HistoryManager<T> {

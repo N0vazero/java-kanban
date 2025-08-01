@@ -4,7 +4,6 @@ import task.Epic;
 import task.Status;
 import task.SubTask;
 import task.Task;
-import util.HistoryList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (existenceCheck(id)) {
             if (epics.containsKey(id)) {
                 Epic epic = epics.get(id);
-                    historyManager.add(epic);
+                historyManager.add(epic);
                 return epic;
             }
         }
@@ -269,7 +268,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private boolean existenceCheck(Object o) {
         if (o instanceof Integer) {
-            return (Integer)o != -1;
+            return (Integer) o != -1;
         } else {
             return o != null;
         }
