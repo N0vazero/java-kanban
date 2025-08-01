@@ -25,11 +25,11 @@ public interface TaskManager {
 
     boolean deleteEpic(Integer id);
 
-    Task getTask(Integer id, boolean isUserCall);
+    Task getTask(Integer id);
 
-    Epic getEpic(Integer id, boolean isUserCall);
+    Epic getEpic(Integer id);
 
-    SubTask getSubtask(Integer id, boolean isUserCall);
+    SubTask getSubtask(Integer id);
 
     List<Integer> getSubtasksFromEpic(int id);
 

@@ -36,15 +36,15 @@ class InMemoryTaskManagerTest {
     public void addedTasksReallyAddAreAdded() {
         Task task = new Task("t1");
         manager.addTask(task);
-        assertNotNull(manager.getTask(task.getId(), false));
+        assertNotNull(manager.getTask(task.getId()));
 
         Epic epic = new Epic("e2");
         manager.addEpic(epic);
-        assertNotNull(manager.getEpic(epic.getId(), false));
+        assertNotNull(manager.getEpic(epic.getId()));
 
         SubTask subTask = new SubTask(epic.getId(), "s3");
         manager.addSubtask(subTask);
-        assertNotNull(manager.getSubtask(subTask.getId(), false));
+        assertNotNull(manager.getSubtask(subTask.getId()));
     }
 
     @Test

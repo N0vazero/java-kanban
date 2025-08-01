@@ -36,7 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(id);
         epics.put(id, epic);
         for (Integer idSubtask : this.getSubtasksFromEpic(epic.getId())) {
-            this.addSubtask(this.getSubtask(idSubtask, false));
+            this.addSubtask(this.subTasks.get(idSubtask));
         }
         this.updateStatusEpic(epic.getId());
         idIncrease();
@@ -45,7 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean addSubtask(SubTask subtask) {
-        Epic epic = this.getEpic(subtask.getIdEpic(), false);
+        Epic epic = this.epics.get(subtask.getIdEpic());
         if (epic != null) {
             subtask.setId(id);
             subTasks.put(id, subtask);
@@ -76,7 +76,7 @@ public class InMemoryTaskManager implements TaskManager {
                 Integer[] temp = new Integer[0];
                 Integer[] subtasksId = epic.getSubTasks().toArray(temp);
                 for (Integer idSubtask : subtasksId) {
-                    this.updateSubtask(this.getSubtask(idSubtask, false));
+                    this.updateSubtask(this.subTasks.get(idSubtask));
                 }
                 this.updateStatusEpic(epic.getId());
                 return true;
@@ -91,7 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (existenceCheck(subtask.getId())) {
             if (subTasks.containsKey(subtask.getId())) {
                 subTasks.put(subtask.getId(), subtask);
-                Epic epic = this.getEpic(subtask.getIdEpic(), false);
+                Epic epic = this.epics.get(subtask.getIdEpic());
                 epic.getSubTasks().add(subtask.getId());
                 this.updateStatusEpic(epic.getId());
             }
@@ -131,7 +131,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (existenceCheck(id)) {
             if (subTasks.containsKey(id)) {
                 SubTask subtask = subTasks.get(id);
-                Epic epic = this.getEpic(subtask.getIdEpic(), false);
+                Epic epic = this.epics.get(subtask.getIdEpic());
                 epic.getSubTasks().remove((Integer) id);
                 subTasks.remove(id);
                 this.updateStatusEpic(epic.getId());
@@ -158,13 +158,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(Integer id, boolean isUserCall) {
+    public Task getTask(Integer id) {
         if (existenceCheck(id)) {
             if (tasks.containsKey(id)) {
                 Task task = tasks.get(id);
-                if (isUserCall) {
-                    historyManager.add(task);
-                }
+                historyManager.add(task);
                 return task;
             }
         }
@@ -172,13 +170,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpic(Integer id, boolean isUserCall) {
+    public Epic getEpic(Integer id) {
         if (existenceCheck(id)) {
             if (epics.containsKey(id)) {
                 Epic epic = epics.get(id);
-                if (isUserCall) {
                     historyManager.add(epic);
-                }
                 return epic;
             }
         }
@@ -186,13 +182,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public SubTask getSubtask(Integer id, boolean isUserCall) {
+    public SubTask getSubtask(Integer id) {
         if (existenceCheck(id)) {
             if (subTasks.containsKey(id)) {
                 SubTask subTask = subTasks.get(id);
-                if (isUserCall) {
-                    historyManager.add(subTask);
-                }
+                historyManager.add(subTask);
                 return subTask;
             }
         }
@@ -201,23 +195,23 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Integer> getSubtasksFromEpic(int id) {
-        Epic epic = this.getEpic(id, false);
+        Epic epic = this.epics.get(id);
         return epic.getSubTasks();
     }
 
     private void updateStatusEpic(int id) {
-        Epic epic = this.getEpic(id, false);
+        Epic epic = this.epics.get(id);
         boolean isNew = true;
         boolean isDone = true;
         for (Integer idSubtask : this.getSubtasksFromEpic(id)) {
-            if (this.getSubtask(idSubtask, false).getStatus() == Status.IN_PROGRESS) {
+            if (this.subTasks.get(idSubtask).getStatus() == Status.IN_PROGRESS) {
                 epic.setStatus(Status.IN_PROGRESS);
                 return;
             }
-            if (this.getSubtask(idSubtask, false).getStatus() == Status.DONE) {
+            if (this.subTasks.get(idSubtask).getStatus() == Status.DONE) {
                 isNew = false;
             }
-            if (this.getSubtask(idSubtask, false).getStatus() == Status.NEW) {
+            if (this.subTasks.get(idSubtask).getStatus() == Status.NEW) {
                 isDone = false;
             }
         }
