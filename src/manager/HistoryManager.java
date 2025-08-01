@@ -2,10 +2,12 @@ package manager;
 
 import util.HistoryList;
 
+import java.util.List;
+
 public interface HistoryManager<T> {
     void remove(int id);
 
-    HistoryList getHistory();
+    List<T> getHistory();
 
     void add(T obj);
 }

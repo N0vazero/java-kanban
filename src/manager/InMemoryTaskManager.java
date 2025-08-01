@@ -8,6 +8,7 @@ import util.HistoryList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -268,7 +269,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public HistoryList getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
