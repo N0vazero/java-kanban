@@ -3,7 +3,7 @@ package manager;
 import org.junit.jupiter.api.Test;
 import task.Task;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class InMemoryHistoryManagerTest {
 
@@ -12,7 +12,7 @@ class InMemoryHistoryManagerTest {
         TaskManager manager = Managers.getDefalut();
         Task task = new Task("t1");
         manager.addTask(task);
-        manager.getTask(task.getId(), true);
+        manager.getTask(task.getId());
         task.setDescription("There is some changes");
         Task oldTask = manager.getHistory().getFirst();
         assertNotEquals(task.getDescription(), oldTask.getDescription());
